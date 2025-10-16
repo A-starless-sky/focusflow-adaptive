@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Brain, Camera, CheckCircle2, ArrowRight } from "lucide-react";
+import { Camera, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import minrvaLogo from "@/assets/minrva-logo.png";
 
 const Calibrate = () => {
   const [searchParams] = useSearchParams();
@@ -43,20 +44,21 @@ const Calibrate = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,hsl(263_70%_60%/0.15),transparent_70%)]" />
+    <div className="min-h-screen celestial-bg relative overflow-hidden">
+      {/* Celestial Glow Effects */}
+      <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse-slow" />
+      <div className="absolute bottom-20 right-1/4 w-80 h-80 bg-success/20 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
       
       <div className="relative z-10">
         {/* Header */}
         <header className="container mx-auto px-4 py-6">
           <nav className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
-              <Brain className="w-8 h-8 text-primary" />
+            <Link to="/" className="flex items-center gap-3">
+              <img src={minrvaLogo} alt="Minrva Logo" className="w-10 h-10 rounded-full glow-primary" />
               <span className="text-2xl font-bold gradient-text">Minrva</span>
             </Link>
             <Link to="/modes">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="border border-accent/30 hover:border-accent/60">
                 Back to Modes
               </Button>
             </Link>
@@ -67,8 +69,12 @@ const Calibrate = () => {
         <section className="container mx-auto px-4 py-12">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass ornate-border mb-6">
+                <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+                <span className="text-sm font-medium gradient-accent-text">Baseline Calibration</span>
+              </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Calibrate Your Baseline
+                Calibrate Your <span className="gradient-text">Baseline</span>
               </h1>
               <p className="text-xl text-muted-foreground">
                 Let's capture your focus and distracted positions for accurate tracking

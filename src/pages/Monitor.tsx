@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Brain, Camera, Pause, Play, Settings } from "lucide-react";
+import { Camera, Pause, Play, Settings, Sparkles } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import FocusMeter from "@/components/FocusMeter";
 import ParameterBreakdown from "@/components/ParameterBreakdown";
 import SessionStats from "@/components/SessionStats";
+import minrvaLogo from "@/assets/minrva-logo.png";
 
 const Monitor = () => {
   const [searchParams] = useSearchParams();
@@ -37,24 +38,25 @@ const Monitor = () => {
   ].filter(p => p.weight > 0);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,hsl(263_70%_60%/0.15),transparent_70%)]" />
+    <div className="min-h-screen celestial-bg relative overflow-hidden">
+      {/* Celestial Glow Effects */}
+      <div className="absolute top-1/3 left-10 w-80 h-80 bg-primary/20 rounded-full blur-[120px] animate-pulse-slow" />
+      <div className="absolute bottom-1/3 right-10 w-80 h-80 bg-accent/20 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
       
       <div className="relative z-10">
         {/* Header */}
         <header className="container mx-auto px-4 py-6">
           <nav className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
-              <Brain className="w-8 h-8 text-primary" />
+            <Link to="/" className="flex items-center gap-3">
+              <img src={minrvaLogo} alt="Minrva Logo" className="w-10 h-10 rounded-full glow-primary" />
               <span className="text-2xl font-bold gradient-text">Minrva</span>
             </Link>
             <div className="flex gap-2">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="border border-accent/30 hover:border-accent/60">
                 <Settings className="w-4 h-4" />
               </Button>
               <Link to="/modes">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="border border-destructive/30 hover:border-destructive/60">
                   End Session
                 </Button>
               </Link>
@@ -66,15 +68,20 @@ const Monitor = () => {
         <section className="container mx-auto px-4 py-6">
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Left Column - Camera Feed */}
-            <Card className="lg:col-span-2 p-6 glass">
-              <div className="space-y-4">
+            <Card className="lg:col-span-2 p-6 glass ornate-border border-accent/20 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+              <div className="relative z-10 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold">Live Feed</h2>
+                  <h2 className="text-2xl font-semibold flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-accent" />
+                    Live Feed
+                  </h2>
                   <div className="flex gap-2">
                     <Button
                       size="sm"
                       variant={isMonitoring ? "default" : "secondary"}
                       onClick={() => setIsMonitoring(!isMonitoring)}
+                      className="border border-accent/30 hover:glow-accent"
                     >
                       {isMonitoring ? (
                         <>
@@ -92,20 +99,21 @@ const Monitor = () => {
                 </div>
 
                 {/* Camera Preview */}
-                <div className="bg-muted/30 rounded-lg aspect-video flex items-center justify-center relative overflow-hidden">
-                  <div className="text-center">
+                <div className="bg-muted/30 rounded-lg aspect-video flex items-center justify-center relative overflow-hidden border border-accent/20">
+                  <div className="absolute inset-0 bg-gradient-radial opacity-20" />
+                  <div className="text-center relative z-10">
                     <Camera className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                     <p className="text-muted-foreground">Camera feed with overlay</p>
                   </div>
                   
                   {/* Mock overlays */}
-                  <div className="absolute top-4 left-4 bg-background/80 px-3 py-1 rounded-full text-sm">
-                    Mode: <span className="font-semibold text-primary capitalize">{mode}</span>
+                  <div className="absolute top-4 left-4 bg-background/90 px-3 py-1 rounded-full text-sm border border-accent/30 backdrop-blur-sm">
+                    Mode: <span className="font-semibold gradient-accent-text capitalize">{mode}</span>
                   </div>
                   
                   {isMonitoring && (
-                    <div className="absolute top-4 right-4 flex items-center gap-2 bg-background/80 px-3 py-1 rounded-full text-sm">
-                      <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
+                    <div className="absolute top-4 right-4 flex items-center gap-2 bg-background/90 px-3 py-1 rounded-full text-sm border border-success/30 backdrop-blur-sm">
+                      <div className="w-2 h-2 bg-success rounded-full animate-pulse glow-accent" />
                       <span>Monitoring</span>
                     </div>
                   )}

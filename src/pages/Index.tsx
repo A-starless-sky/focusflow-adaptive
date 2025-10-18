@@ -2,17 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Brain, Eye, Zap, Settings, Sparkles, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ParallaxBackground } from "@/components/ParallaxBackground";
+import { BackgroundSelector } from "@/components/BackgroundSelector";
 import minrvaLogo from "@/assets/minrva-logo.png";
 
 const Index = () => {
   return (
-    <div className="min-h-screen celestial-bg relative overflow-hidden">
-      {/* Celestial Glow Effects */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse-slow" />
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-accent/20 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px]" style={{ background: 'var(--gradient-glow)' }} />
-      
-      <div className="relative z-10">
+    <ParallaxBackground>
         {/* Header */}
         <header className="container mx-auto px-4 py-6">
           <nav className="flex items-center justify-between">
@@ -20,10 +16,13 @@ const Index = () => {
               <img src={minrvaLogo} alt="Minrva Logo" className="w-12 h-12 rounded-full glow-primary" />
               <span className="text-3xl font-bold gradient-text">Minrva</span>
             </div>
-            <Button variant="ghost" size="sm" className="border border-accent/30 hover:border-accent/60 hover:glow-accent transition-all">
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </Button>
+            <div className="flex gap-2">
+              <BackgroundSelector />
+              <Button variant="ghost" size="sm" className="border border-accent/30 hover:border-accent/60 hover:glow-accent transition-all">
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+            </div>
           </nav>
         </header>
 
@@ -109,8 +108,7 @@ const Index = () => {
             </div>
           </Card>
         </section>
-      </div>
-    </div>
+    </ParallaxBackground>
   );
 };
 

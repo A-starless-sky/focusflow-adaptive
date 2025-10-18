@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Camera, Pause, Play, Settings, Sparkles } from "lucide-react";
@@ -6,44 +6,48 @@ import { Link, useSearchParams } from "react-router-dom";
 import FocusMeter from "@/components/FocusMeter";
 import ParameterBreakdown from "@/components/ParameterBreakdown";
 import SessionStats from "@/components/SessionStats";
+import { BackgroundSelector } from "@/components/BackgroundSelector";
+import { ParallaxBackground } from "@/components/ParallaxBackground";
+import { useFocusDetection } from "@/hooks/use-focus-detection";
 import minrvaLogo from "@/assets/minrva-logo.png";
 
 const Monitor = () => {
   const [searchParams] = useSearchParams();
   const mode = searchParams.get("mode") || "digital";
   
-  const [isMonitoring, setIsMonitoring] = useState(true);
-  const [focusScore, setFocusScore] = useState(0.75);
+  const [isMonitoring, setIsMonitoring] = useState(false);
   const [sessionTime, setSessionTime] = useState(0);
+  const { focusScore, parameters: detectedParams, isInitialized, videoRef, startWebcam, analyzeFrame } = useFocusDetection(mode);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Simulate real-time focus score updates
+  // Start webcam when monitoring begins
+  useEffect(() => {
+    if (isMonitoring && isInitialized) {
+      startWebcam();
+    }
+  }, [isMonitoring, isInitialized]);
+
+  // Analyze frames and update session time
   useEffect(() => {
     if (!isMonitoring) return;
 
     const interval = setInterval(() => {
-      // Simulate fluctuating focus score
-      const variation = (Math.random() - 0.5) * 0.3;
-      setFocusScore((prev) => Math.max(0, Math.min(1, prev + variation)));
+      analyzeFrame();
       setSessionTime((prev) => prev + 1);
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [isMonitoring]);
+  }, [isMonitoring, analyzeFrame]);
 
   const parameters = [
-    { name: "Head Direction", value: 0.85, weight: mode === "digital" ? 0.6 : 0.4 },
-    { name: "Hand Activity", value: 0.70, weight: mode === "offline" ? 0.5 : 0.3 },
-    { name: "Posture Stability", value: 0.65, weight: 0.1 },
-    { name: "Context Smoothness", value: 0.80, weight: mode === "hybrid" ? 0.2 : 0 },
+    { name: "Head Direction", value: detectedParams.headDirection, weight: mode === "digital" ? 0.6 : 0.4 },
+    { name: "Hand Activity", value: detectedParams.handActivity, weight: mode === "offline" ? 0.5 : 0.3 },
+    { name: "Posture Stability", value: detectedParams.postureStability, weight: 0.1 },
+    { name: "Context Smoothness", value: detectedParams.contextSmoothness, weight: mode === "hybrid" ? 0.2 : 0 },
   ].filter(p => p.weight > 0);
 
   return (
-    <div className="min-h-screen celestial-bg relative overflow-hidden">
-      {/* Celestial Glow Effects */}
-      <div className="absolute top-1/3 left-10 w-80 h-80 bg-primary/20 rounded-full blur-[120px] animate-pulse-slow" />
-      <div className="absolute bottom-1/3 right-10 w-80 h-80 bg-accent/20 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
-      
-      <div className="relative z-10">
+    <ParallaxBackground>
         {/* Header */}
         <header className="container mx-auto px-4 py-6">
           <nav className="flex items-center justify-between">
@@ -52,6 +56,7 @@ const Monitor = () => {
               <span className="text-2xl font-bold gradient-text">Minrva</span>
             </Link>
             <div className="flex gap-2">
+              <BackgroundSelector />
               <Button variant="ghost" size="sm" className="border border-accent/30 hover:border-accent/60">
                 <Settings className="w-4 h-4" />
               </Button>
@@ -100,11 +105,27 @@ const Monitor = () => {
 
                 {/* Camera Preview */}
                 <div className="bg-muted/30 rounded-lg aspect-video flex items-center justify-center relative overflow-hidden border border-accent/20">
-                  <div className="absolute inset-0 bg-gradient-radial opacity-20" />
-                  <div className="text-center relative z-10">
-                    <Camera className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Camera feed with overlay</p>
-                  </div>
+                  <video
+                    ref={videoRef}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ display: isMonitoring ? 'block' : 'none' }}
+                  />
+                  <canvas
+                    ref={canvasRef}
+                    className="absolute inset-0 w-full h-full"
+                    style={{ display: isMonitoring ? 'block' : 'none' }}
+                  />
+                  {!isMonitoring && (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-radial opacity-20" />
+                      <div className="text-center relative z-10">
+                        <Camera className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground">
+                          {isInitialized ? "Press Resume to start monitoring" : "Initializing models..."}
+                        </p>
+                      </div>
+                    </>
+                  )}
                   
                   {/* Mock overlays */}
                   <div className="absolute top-4 left-4 bg-background/90 px-3 py-1 rounded-full text-sm border border-accent/30 backdrop-blur-sm">
@@ -131,8 +152,7 @@ const Monitor = () => {
             </div>
           </div>
         </section>
-      </div>
-    </div>
+    </ParallaxBackground>
   );
 };
 

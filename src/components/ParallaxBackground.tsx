@@ -35,17 +35,18 @@ export const ParallaxBackground = ({ children }: ParallaxBackgroundProps) => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Cursor Glow Effect */}
+      {/* Cursor Deblur Bubble */}
       <div
-        className="fixed pointer-events-none z-[100] mix-blend-screen transition-opacity duration-300"
+        className="fixed pointer-events-none z-[100] transition-opacity duration-300 rounded-full"
         style={{
           left: mousePosition.x,
           top: mousePosition.y,
           transform: 'translate(-50%, -50%)',
-          width: '350px',
-          height: '350px',
-          background: 'radial-gradient(circle, hsl(var(--primary) / 0.08) 0%, hsl(var(--accent) / 0.05) 25%, transparent 70%)',
-          filter: 'blur(35px)',
+          width: '250px',
+          height: '250px',
+          backdropFilter: 'blur(0px) brightness(1.1)',
+          WebkitBackdropFilter: 'blur(0px) brightness(1.1)',
+          border: '1px solid hsl(var(--primary) / 0.2)',
         }}
       />
 
@@ -61,10 +62,10 @@ export const ParallaxBackground = ({ children }: ParallaxBackgroundProps) => {
           <img
             src={currentBackground}
             alt="Background"
-            className="w-full h-[120vh] object-cover"
+            className="w-full h-[200vh] object-cover"
           />
         ) : (
-          <div className="w-full h-full celestial-bg" />
+          <div className="w-full h-[200vh] celestial-bg" />
         )}
         <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" />
       </div>

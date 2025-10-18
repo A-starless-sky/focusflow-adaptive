@@ -42,10 +42,10 @@ export const ParallaxBackground = ({ children }: ParallaxBackgroundProps) => {
           left: mousePosition.x,
           top: mousePosition.y,
           transform: 'translate(-50%, -50%)',
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle, hsl(var(--primary) / 0.15) 0%, hsl(var(--accent) / 0.1) 25%, transparent 70%)',
-          filter: 'blur(40px)',
+          width: '350px',
+          height: '350px',
+          background: 'radial-gradient(circle, hsl(var(--primary) / 0.08) 0%, hsl(var(--accent) / 0.05) 25%, transparent 70%)',
+          filter: 'blur(35px)',
         }}
       />
 

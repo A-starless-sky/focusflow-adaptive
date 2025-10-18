@@ -1,6 +1,11 @@
 import { useEffect, useState, ReactNode } from "react";
 import { useBackgroundStore } from "@/hooks/use-background-store";
 
+interface MousePosition {
+  x: number;
+  y: number;
+}
+
 interface ParallaxBackgroundProps {
   children: ReactNode;
 }
@@ -8,18 +13,42 @@ interface ParallaxBackgroundProps {
 export const ParallaxBackground = ({ children }: ParallaxBackgroundProps) => {
   const { currentBackground } = useBackgroundStore();
   const [scrollY, setScrollY] = useState(0);
+  const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
 
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("mousemove", handleMouseMove);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+      {/* Cursor Glow Effect */}
+      <div
+        className="fixed pointer-events-none z-[100] mix-blend-screen transition-opacity duration-300"
+        style={{
+          left: mousePosition.x,
+          top: mousePosition.y,
+          transform: 'translate(-50%, -50%)',
+          width: '600px',
+          height: '600px',
+          background: 'radial-gradient(circle, hsl(var(--primary) / 0.15) 0%, hsl(var(--accent) / 0.1) 25%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+
       {/* Parallax Background Layer */}
       <div
         className="fixed inset-0 z-0"

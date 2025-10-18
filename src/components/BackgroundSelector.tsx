@@ -16,13 +16,13 @@ import wallpaper7 from "@/assets/backgrounds/wallpaper-7.jpg";
 
 const backgrounds = [
   { id: "default", name: "Celestial", preview: null },
-  { id: "1", name: "Study Room", preview: wallpaper1 },
-  { id: "2", name: "Moonlit Field", preview: wallpaper2 },
-  { id: "3", name: "City Skyline", preview: wallpaper3 },
-  { id: "4", name: "Starry Reflections", preview: wallpaper4 },
-  { id: "5", name: "Classroom Serenity", preview: wallpaper5 },
-  { id: "6", name: "Festival Night", preview: wallpaper6 },
-  { id: "7", name: "Academic Records", preview: wallpaper7 },
+  { id: "1", name: "Mystic Library", preview: wallpaper1 },
+  { id: "2", name: "Sunset Journey", preview: wallpaper2 },
+  { id: "3", name: "Starlit Voyage", preview: wallpaper3 },
+  { id: "4", name: "Laundry Dreams", preview: wallpaper4 },
+  { id: "5", name: "Chibi Crowd", preview: wallpaper5 },
+  { id: "6", name: "Autumn Ruins", preview: wallpaper6 },
+  { id: "7", name: "Azure Stage", preview: wallpaper7 },
 ];
 
 export const BackgroundSelector = () => {
